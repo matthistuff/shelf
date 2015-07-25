@@ -14,11 +14,23 @@ func main() {
 	app.Name = "shelf"
 	app.Usage = "A simple document management system"
 
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{
+			Name: "no-color",
+			Usage: "disable colored output",
+		},
+	}
+
 	app.Commands = []cli.Command{
 		{
 			Name: "create",
 			Usage: "Create an object",
 			Action: actions.CreateObject,
+		},
+		{
+			Name: "info",
+			Usage: "Print information about an object",
+			Action: actions.GetObject,
 		},
 		{
 			Name: "attach",
