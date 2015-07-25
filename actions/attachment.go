@@ -39,3 +39,16 @@ func AddAttachment(c *cli.Context) {
 	object.Attachments = append(object.Attachments, *attachment)
 	object.Update()
 }
+
+func ListAttachments(c *cli.Context) {
+	objectId := c.Args().First()
+
+	helpers.ErrExit(objectId == "", "No object ID given!")
+
+	object, err := data.GetObject(objectId)
+	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
+
+	for index, attachment := range object.Attachments {
+		fmt.Printf("(%d) %s \"%s\"\n", index+1, attachment.Id.Hex(), attachment.Filename)
+	}
+}

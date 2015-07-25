@@ -26,6 +26,11 @@ func main() {
 			Action: actions.AddAttachment,
 		},
 		{
+			Name: "attachments",
+			Usage: "List all attachments of an object",
+			Action: actions.ListAttachments,
+		},
+		{
 			Name: "attribute",
 			Usage: "Manage object attributes",
 			Subcommands: []cli.Command{
