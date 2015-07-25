@@ -12,7 +12,7 @@ func main() {
 	app := cli.NewApp()
 	app.EnableBashCompletion = true
 	app.Name = "shelf"
-	app.Usage = "A simple document management system"
+	app.Usage = "a simple document management system"
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
@@ -24,58 +24,58 @@ func main() {
 	app.Commands = []cli.Command{
 		{
 			Name: "create",
-			Usage: "Create an object",
+			Usage: "create an object",
 			Action: actions.CreateObject,
 		},
 		{
 			Name: "info",
-			Usage: "Print information about an object",
+			Usage: "print information about an object",
 			Action: actions.GetObject,
 		},
 		{
 			Name: "attach",
-			Usage: "Attach a file to an object",
+			Usage: "attach a file to an object",
 			Action: actions.AddAttachment,
 		},
 		{
 			Name: "attachments",
-			Usage: "List all attachments of an object",
+			Usage: "list all attachments of an object",
 			Action: actions.ListAttachments,
 		},
 		{
 			Name: "retrieve",
-			Usage: "Retrieve an attachment",
+			Usage: "send an attachment to stdout",
 			Action: actions.GetAttachment,
 		},
 		{
 			Name: "attribute",
-			Usage: "Manage object attributes",
+			Usage: "manage object attributes",
 			Subcommands: []cli.Command{
 				{
 					Name: "add",
-					Usage: "Add an attribute to an object",
+					Usage: "add an attribute to an object",
 					Action: actions.AddAttribute,
 				},
 				{
 					Name: "remove",
-					Usage: "Remove an attribute from an object",
+					Usage: "remove an attribute from an object",
 					Action: actions.RemoveAttribute,
 				},
 			},
 		},
 		{
 			Name: "tag",
-			Usage: "Add a tag to an object",
+			Usage: "add a tag to an object",
 			Action: actions.AddTag,
 		},
 		{
 			Name: "untag",
-			Usage: "Remove a tag from an object",
+			Usage: "remove a tag from an object",
 			Action: actions.RemoveTag,
 		},
 		{
 			Name: "search",
-			Usage: "Search objects",
+			Usage: "search objects",
 			Action: actions.Search,
 			Flags: []cli.Flag{
 				cli.IntFlag{
