@@ -8,6 +8,7 @@ import (
 	"path"
 	"fmt"
 	"github.com/matthistuff/shelf/helpers"
+	"gopkg.in/mgo.v2/bson"
 )
 
 
@@ -38,6 +39,23 @@ func AddAttachment(c *cli.Context) {
 	attachment := data.CreateAttachment(dbFile, path.Base(filepath))
 	object.Attachments = append(object.Attachments, *attachment)
 	object.Update()
+}
+
+func GetAttachment(c *cli.Context) {
+	attachmentId := c.Args().First()
+
+	helpers.ErrExit(attachmentId == "", "No object ID given!")
+
+	db, _ := data.DB()
+
+	file, err := db.GridFS("fs").OpenId(bson.ObjectIdHex(attachmentId))
+	helpers.ErrPanic(err)
+
+	_, err = io.Copy(os.Stdout, file)
+	helpers.ErrPanic(err)
+
+	err = file.Close()
+	helpers.ErrPanic(err)
 }
 
 func ListAttachments(c *cli.Context) {

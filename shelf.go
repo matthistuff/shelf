@@ -31,6 +31,11 @@ func main() {
 			Action: actions.ListAttachments,
 		},
 		{
+			Name: "retrieve",
+			Usage: "Retrieve an attachment",
+			Action: actions.GetAttachment,
+		},
+		{
 			Name: "attribute",
 			Usage: "Manage object attributes",
 			Subcommands: []cli.Command{
