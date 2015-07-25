@@ -39,6 +39,8 @@ func AddAttachment(c *cli.Context) {
 	attachment := data.CreateAttachment(dbFile, path.Base(filepath))
 	object.Attachments = append(object.Attachments, *attachment)
 	object.Update()
+
+	fmt.Println(attachment.Id.Hex())
 }
 
 func GetAttachment(c *cli.Context) {
