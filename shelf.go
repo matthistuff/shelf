@@ -77,6 +77,13 @@ func main() {
 			Name: "search",
 			Usage: "Search objects",
 			Action: actions.Search,
+			Flags: []cli.Flag{
+				cli.IntFlag{
+					Name: "page",
+					Value: 1,
+					Usage:"search results page",
+				},
+			},
 		},
 	}
 
