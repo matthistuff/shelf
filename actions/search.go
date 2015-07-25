@@ -3,7 +3,6 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/matthistuff/shelf/data"
 	"gopkg.in/mgo.v2/bson"
-	"strings"
 	"fmt"
 	"github.com/fatih/color"
 	"strconv"
@@ -12,30 +11,52 @@ import (
 func Search(c *cli.Context) {
 	color.NoColor = c.GlobalBool("no-color")
 
-	search := strings.Join(c.Args(), " ")
 	page := c.Int("page")
 	perPage := 10
 
-	db, _ := data.DB()
+	searchQuery := data.ParseQuery(c.Args())
+	search := []bson.M{}
+	if searchQuery.Text != "" {
+		search = append(search, bson.M{
+			"$text":bson.M{
+				"$search": searchQuery.Text,
+			},
+		})
+	}
 
-	result := []data.Object{}
+	for _, attrQuery := range searchQuery.AttributeQuery {
+		search = append(search, bson.M{
+			"attributes": bson.M{
+				"$elemMatch": bson.M{
+					"name": attrQuery.Name,
+					"value": bson.M{
+						"$regex": attrQuery.Value,
+					},
+				},
+			},
+		})
+	}
+
+	db, _ := data.DB()
 	query := db.C("objects").Find(bson.M{
-		"$text":bson.M{
-			"$search":search,
-		},
+		"$and": search,
 	}).Select(bson.M{
 		"score": bson.M{
 			"$meta": "textScore",
 		},
-	}).Sort("$textScore:score")
+	}).Sort("$textScore:score", "-_id")
+
 	total, _ := query.Count()
+	result := []data.Object{}
 	query.Skip((page-1)*perPage).Limit(perPage).All(&result)
 
 	green := color.New(color.FgGreen, color.Bold).SprintFunc()
 	bold := color.New(color.Bold).SprintFunc()
 
-	for index, object := range result {
-		fmt.Printf("(%s) %s \"%s\"\n", bold(index+1), green(object.Id.Hex()), object.Title)
+	if total > 0 {
+		for index, object := range result {
+			fmt.Printf("(%s) %s \"%s\"\n", bold(index+1), green(object.Id.Hex()), object.Title)
+		}
+		fmt.Printf("Page %s of %s\n", bold(strconv.Itoa(page)), bold(strconv.Itoa(int(total/perPage)+1)))
 	}
-	fmt.Printf("Page %s of %s\n", bold(strconv.Itoa(page)), bold(strconv.Itoa(int(total/perPage)+1)))
 }
