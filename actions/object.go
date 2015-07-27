@@ -22,6 +22,20 @@ func CreateObject(c *cli.Context) {
 	fmt.Printf("%s\n", object.Id.Hex())
 }
 
+func DeleteObject(c *cli.Context) {
+	objectId := c.Args().First()
+
+	object, err := data.GetObject(objectId)
+	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
+
+	files := data.Files()
+	for _, attachment := range object.Attachments {
+		files.RemoveId(attachment.Id)
+	}
+
+	data.Objects().RemoveId(object.Id)
+}
+
 func GetObject(c *cli.Context) {
 	color.NoColor = c.GlobalBool("no-color")
 

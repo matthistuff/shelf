@@ -28,6 +28,11 @@ func main() {
 			Action: actions.CreateObject,
 		},
 		{
+			Name: "delete",
+			Usage: "deletes an object",
+			Action: actions.DeleteObject,
+		},
+		{
 			Name: "info",
 			Usage: "print information about an object",
 			Action: actions.GetObject,
