@@ -14,9 +14,7 @@ type Object struct {
 }
 
 func (o *Object) Update() error {
-	db, _ := DB()
-
-	return db.C("objects").UpdateId(o.Id, o)
+	return Objects().UpdateId(o.Id, o)
 }
 
 func (o *Object) AddAttribute(name string, value string) {
@@ -71,10 +69,8 @@ func CreateObject(title string) *Object {
 }
 
 func GetObject(id string) (*Object, error) {
-	db, _ := DB()
-
 	object := Object{}
-	err := db.C("objects").FindId(bson.ObjectIdHex(id)).One(&object)
+	err := Objects().FindId(bson.ObjectIdHex(id)).One(&object)
 
 	return &object, err
 }

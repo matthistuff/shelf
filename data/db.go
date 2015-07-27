@@ -19,3 +19,15 @@ func DB() (*mgo.Database, *mgo.Session) {
 
 	return session.DB("shelf"), session
 }
+
+func Objects() *mgo.Collection {
+	db, _ := DB()
+
+	return db.C("objects")
+}
+
+func Files() *mgo.GridFS {
+	db, _ := DB()
+
+	return db.GridFS("fs")
+}

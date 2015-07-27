@@ -19,12 +19,10 @@ func AddAttachment(c *cli.Context) {
 
 	helpers.ErrExit(objectId == "", "No object ID given!")
 
-	db, _ := data.DB()
-
 	object, err := data.GetObject(objectId)
 	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
-	dbFile, err := db.GridFS("fs").Create("")
+	dbFile, err := data.Files().Create("")
 	helpers.ErrPanic(err)
 
 	file, err := os.Open(filepath)
@@ -49,9 +47,7 @@ func GetAttachment(c *cli.Context) {
 
 	helpers.ErrExit(attachmentId == "", "No object ID given!")
 
-	db, _ := data.DB()
-
-	file, err := db.GridFS("fs").OpenId(bson.ObjectIdHex(attachmentId))
+	file, err := data.Files().OpenId(bson.ObjectIdHex(attachmentId))
 	helpers.ErrPanic(err)
 
 	_, err = io.Copy(os.Stdout, file)

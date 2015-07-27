@@ -87,11 +87,11 @@ func main() {
 		},
 	}
 
-	db, session := data.DB()
+	_, session := data.DB()
 	defer session.Close()
 
 	// db.objects.find({$text:{$search:"values"}}, {score: { $meta: "textScore" }}).sort({ score: { $meta: "textScore" } }).skip(0).limit(100)
-	db.C("objects").EnsureIndex(mgo.Index{
+	data.Objects().EnsureIndex(mgo.Index{
 		Key: []string{
 			"$text:title",
 			"$text:attachments.content",

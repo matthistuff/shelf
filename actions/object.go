@@ -12,12 +12,11 @@ import (
 )
 
 func CreateObject(c *cli.Context) {
-	db, _ := data.DB()
 	title := strings.Join(c.Args(), " ")
 
 	object := data.CreateObject(title)
 
-	err := db.C("objects").Insert(object)
+	err := data.Objects().Insert(object)
 	helpers.ErrPanic(err)
 
 	fmt.Printf("%s\n", object.Id.Hex())

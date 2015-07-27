@@ -37,8 +37,7 @@ func Search(c *cli.Context) {
 		})
 	}
 
-	db, _ := data.DB()
-	query := db.C("objects").Find(bson.M{
+	query := data.Objects().Find(bson.M{
 		"$and": search,
 	}).Select(bson.M{
 		"score": bson.M{
