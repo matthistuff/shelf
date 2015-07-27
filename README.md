@@ -19,7 +19,7 @@ A simple document management system.
 If you have Go installed already
 
 ```
-go install github.com/matthistuff/shelf
+go get github.com/matthistuff/shelf
 ```
 
 Shelf uses mongoDB for data and file storage. You need to expose your mongo host to Shelf.
