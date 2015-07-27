@@ -9,6 +9,7 @@ import (
 	"sort"
 	"github.com/fatih/color"
 	"time"
+	"strconv"
 )
 
 func CreateObject(c *cli.Context) {
@@ -34,6 +35,29 @@ func DeleteObject(c *cli.Context) {
 	}
 
 	data.Objects().RemoveId(object.Id)
+}
+
+func GetObjects(c *cli.Context) {
+	color.NoColor = c.GlobalBool("no-color")
+
+	page := c.Int("page")
+	perPage := 10
+
+	query := data.Objects().Find(nil).Sort("-_id")
+
+	total, _ := query.Count()
+	result := []data.Object{}
+	query.Skip((page-1)*perPage).Limit(perPage).All(&result)
+
+	green := color.New(color.FgGreen, color.Bold).SprintFunc()
+	bold := color.New(color.Bold).SprintFunc()
+
+	if total > 0 {
+		for index, object := range result {
+			fmt.Printf("(%s) %s \"%s\"\n", bold(index+1), green(object.Id.Hex()), object.Title)
+		}
+		fmt.Printf("Page %s of %s\n", bold(strconv.Itoa(page)), bold(strconv.Itoa(int(total/perPage)+1)))
+	}
 }
 
 func GetObject(c *cli.Context) {

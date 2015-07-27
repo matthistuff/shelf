@@ -33,6 +33,18 @@ func main() {
 			Action: actions.DeleteObject,
 		},
 		{
+			Name: "list",
+			Usage: "lists objects",
+			Action: actions.GetObjects,
+			Flags: []cli.Flag{
+				cli.IntFlag{
+					Name: "page",
+					Value: 1,
+					Usage:"results page",
+				},
+			},
+		},
+		{
 			Name: "info",
 			Usage: "print information about an object",
 			Action: actions.GetObject,
