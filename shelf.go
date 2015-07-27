@@ -24,17 +24,17 @@ func main() {
 	app.Commands = []cli.Command{
 		{
 			Name: "create",
-			Usage: "create an object",
+			Usage: "create an document",
 			Action: actions.CreateObject,
 		},
 		{
 			Name: "delete",
-			Usage: "deletes an object",
+			Usage: "deletes an document",
 			Action: actions.DeleteObject,
 		},
 		{
 			Name: "list",
-			Usage: "lists objects",
+			Usage: "lists documents",
 			Action: actions.GetObjects,
 			Flags: []cli.Flag{
 				cli.IntFlag{
@@ -46,17 +46,17 @@ func main() {
 		},
 		{
 			Name: "info",
-			Usage: "print information about an object",
+			Usage: "print information about an document",
 			Action: actions.GetObject,
 		},
 		{
 			Name: "attach",
-			Usage: "attach a file to an object",
+			Usage: "attach a file to an document",
 			Action: actions.AddAttachment,
 		},
 		{
 			Name: "attachments",
-			Usage: "list all attachments of an object",
+			Usage: "list all attachments of an document",
 			Action: actions.ListAttachments,
 		},
 		{
@@ -66,33 +66,33 @@ func main() {
 		},
 		{
 			Name: "attribute",
-			Usage: "manage object attributes",
+			Usage: "manage document attributes",
 			Subcommands: []cli.Command{
 				{
 					Name: "add",
-					Usage: "add an attribute to an object",
+					Usage: "add an attribute to an document",
 					Action: actions.AddAttribute,
 				},
 				{
 					Name: "remove",
-					Usage: "remove an attribute from an object",
+					Usage: "remove an attribute from an document",
 					Action: actions.RemoveAttribute,
 				},
 			},
 		},
 		{
 			Name: "tag",
-			Usage: "add a tag to an object",
+			Usage: "add a tag to an document",
 			Action: actions.AddTag,
 		},
 		{
 			Name: "untag",
-			Usage: "remove a tag from an object",
+			Usage: "remove a tag from an document",
 			Action: actions.RemoveTag,
 		},
 		{
 			Name: "search",
-			Usage: "search objects",
+			Usage: "search documents",
 			Action: actions.Search,
 			Flags: []cli.Flag{
 				cli.IntFlag{
@@ -107,7 +107,6 @@ func main() {
 	_, session := data.DB()
 	defer session.Close()
 
-	// db.objects.find({$text:{$search:"values"}}, {score: { $meta: "textScore" }}).sort({ score: { $meta: "textScore" } }).skip(0).limit(100)
 	data.Objects().EnsureIndex(mgo.Index{
 		Key: []string{
 			"$text:title",
