@@ -84,18 +84,29 @@ func GetObject(c *cli.Context) {
 	green := color.New(color.FgGreen, color.Bold).SprintFunc()
 	bold := color.New(color.Bold).SprintFunc()
 
-	fmt.Printf("%s\n", red(object.Title))
-	fmt.Printf("Created at %s\n", object.CreateDate.Format(time.RFC1123))
-	fmt.Printf("\n%s\n", red("Attributes"))
+	fmt.Printf("%s\n\n", bold(object.Title))
+	fmt.Printf("%s\n\t%s\n", red("Created"), object.CreateDate.Format(time.RFC1123))
 
-	for k := range keys {
-		sort.Strings(attributes[keys[k]])
-
-		fmt.Printf("\t%s: %s\n", bold(keys[k]), strings.Join(attributes[keys[k]], ", "))
+	if _, exists := attributes["content"]; exists {
+		fmt.Printf("\n%s\n\t%s\n", red("Content"), strings.Join(attributes["content"], ", "))
+		delete(attributes, "content")
 	}
 
-	fmt.Printf("\n%s\n", red("Attachments"))
-	for _, attachment := range object.Attachments {
-		fmt.Printf("\t%s: %s (%s)\n", green(attachment.Id.Hex()), attachment.Filename, attachment.UploadDate.Format(time.RFC1123))
+	if len(attributes) > 0 {
+		fmt.Printf("\n%s\n", red("Attributes"))
+
+		for k := range keys {
+			sort.Strings(attributes[keys[k]])
+
+			fmt.Printf("\t%s: %s\n", bold(keys[k]), strings.Join(attributes[keys[k]], ", "))
+		}
+	}
+
+	if len(object.Attachments) > 0 {
+		fmt.Printf("\n%s\n", red("Attachments"))
+
+		for _, attachment := range object.Attachments {
+			fmt.Printf("\t%s: %s (%s)\n", green(attachment.Id.Hex()), attachment.Filename, attachment.UploadDate.Format(time.RFC1123))
+		}
 	}
 }
