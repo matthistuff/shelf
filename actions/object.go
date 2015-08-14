@@ -40,11 +40,10 @@ func DeleteObject(c *cli.Context) {
 func GetObjects(c *cli.Context) {
 	color.NoColor = c.GlobalBool("no-color")
 
-	page := c.Int("page")
-	perPage := 10
-
 	query := data.Objects().Find(nil).Sort("-_id")
 
+	page := c.Int("page")
+	perPage := 10
 	total, _ := query.Count()
 	result := []data.Object{}
 	query.Skip((page-1)*perPage).Limit(perPage).All(&result)
