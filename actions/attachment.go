@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"github.com/matthistuff/shelf/helpers"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/fatih/color"
 )
 
 
@@ -58,7 +57,7 @@ func GetAttachment(c *cli.Context) {
 }
 
 func ListAttachments(c *cli.Context) {
-	color.NoColor = c.GlobalBool("no-color")
+	helpers.Color(c)
 
 	objectId := c.Args().First()
 	helpers.ErrExit(objectId == "", "No object ID given!")
@@ -66,10 +65,7 @@ func ListAttachments(c *cli.Context) {
 	object, err := data.GetObject(objectId)
 	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
-	green := color.New(color.FgGreen, color.Bold).SprintFunc()
-	bold := color.New(color.Bold).SprintFunc()
-
 	for index, attachment := range object.Attachments {
-		fmt.Printf("(%s) %s \"%s\"\n", bold(index+1), green(attachment.Id.Hex()), attachment.Filename)
+		fmt.Printf("(%s) %s \"%s\"\n", helpers.ShortId(index+1), helpers.ObjectId(attachment.Id.Hex()), attachment.Filename)
 	}
 }

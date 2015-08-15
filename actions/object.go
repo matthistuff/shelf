@@ -7,7 +7,6 @@ import (
 	"github.com/matthistuff/shelf/helpers"
 	"strings"
 	"sort"
-	"github.com/fatih/color"
 	"time"
 	"strconv"
 )
@@ -38,7 +37,7 @@ func DeleteObject(c *cli.Context) {
 }
 
 func GetObjects(c *cli.Context) {
-	color.NoColor = c.GlobalBool("no-color")
+	helpers.Color(c)
 
 	query := data.Objects().Find(nil).Sort("-_id")
 
@@ -51,20 +50,17 @@ func GetObjects(c *cli.Context) {
 	data.ClearCache()
 	defer data.FlushCache()
 
-	green := color.New(color.FgGreen, color.Bold).SprintFunc()
-	bold := color.New(color.Bold).SprintFunc()
-
 	if total > 0 {
 		for index, object := range result {
-			fmt.Printf("(%s) %s \"%s\"\n", bold(index+1), green(object.Id.Hex()), object.Title)
+			fmt.Printf("(%s) %s \"%s\"\n", helpers.ShortId(index+1), helpers.ObjectId(object.Id.Hex()), object.Title)
 			data.SetCache(strconv.Itoa(index+1), object.Id.Hex())
 		}
-		fmt.Printf("Page %s of %s\n", bold(strconv.Itoa(page)), bold(strconv.Itoa(int(total/perPage)+1)))
+		fmt.Printf("Page %s of %s\n", helpers.Bold(strconv.Itoa(page)), helpers.Bold(strconv.Itoa(int(total/perPage)+1)))
 	}
 }
 
 func GetObject(c *cli.Context) {
-	color.NoColor = c.GlobalBool("no-color")
+	helpers.Color(c)
 
 	objectId, exists := data.AssertGuid(c.Args().First())
 	helpers.ErrExit(objectId == "", "No object ID given!")
@@ -84,33 +80,33 @@ func GetObject(c *cli.Context) {
 	}
 	sort.Strings(keys)
 
-	red := color.New(color.FgRed, color.Bold).SprintFunc()
-	green := color.New(color.FgGreen, color.Bold).SprintFunc()
-	bold := color.New(color.Bold).SprintFunc()
-
-	fmt.Printf("%s\n\n", bold(object.Title))
-	fmt.Printf("%s\n\t%s\n", red("Created"), object.CreateDate.Format(time.RFC1123))
+	fmt.Printf("%s\n\n", helpers.Bold(object.Title))
+	fmt.Printf("%s\n\t%s\n", helpers.Header("Created"), object.CreateDate.Format(time.RFC1123))
 
 	if _, exists := attributes["content"]; exists {
-		fmt.Printf("\n%s\n\t%s\n", red("Content"), strings.Join(attributes["content"], ", "))
+		fmt.Printf("\n%s\n\t%s\n", helpers.Header("Content"), strings.Join(attributes["content"], ", "))
 		delete(attributes, "content")
 	}
 
 	if len(attributes) > 0 {
-		fmt.Printf("\n%s\n", red("Attributes"))
+		fmt.Printf("\n%s\n", helpers.Header("Attributes"))
 
 		for k := range keys {
 			sort.Strings(attributes[keys[k]])
 
-			fmt.Printf("\t%s: %s\n", bold(keys[k]), strings.Join(attributes[keys[k]], ", "))
+			fmt.Printf("\t%s: %s\n", helpers.Bold(keys[k]), strings.Join(attributes[keys[k]], ", "))
 		}
 	}
 
 	if len(object.Attachments) > 0 {
-		fmt.Printf("\n%s\n", red("Attachments"))
+		data.ClearCache()
+		defer data.FlushCache()
 
-		for _, attachment := range object.Attachments {
-			fmt.Printf("\t%s: %s (%s)\n", green(attachment.Id.Hex()), attachment.Filename, attachment.UploadDate.Format(time.RFC1123))
+		fmt.Printf("\n%s\n", helpers.Header("Attachments"))
+
+		for index, attachment := range object.Attachments {
+			fmt.Printf("\t(%s) %s: %s (%s)\n", helpers.ShortId(index+1), helpers.ObjectId(attachment.Id.Hex()), attachment.Filename, attachment.UploadDate.Format(time.RFC1123))
+			data.SetCache(strconv.Itoa(index+1), object.Id.Hex())
 		}
 	}
 }

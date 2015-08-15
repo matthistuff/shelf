@@ -4,12 +4,12 @@ import (
 	"github.com/matthistuff/shelf/data"
 	"gopkg.in/mgo.v2/bson"
 	"fmt"
-	"github.com/fatih/color"
 	"strconv"
+	"github.com/matthistuff/shelf/helpers"
 )
 
 func Search(c *cli.Context) {
-	color.NoColor = c.GlobalBool("no-color")
+	helpers.Color(c)
 
 	page := c.Int("page")
 	perPage := 10
@@ -49,13 +49,10 @@ func Search(c *cli.Context) {
 	result := []data.Object{}
 	query.Skip((page-1)*perPage).Limit(perPage).All(&result)
 
-	green := color.New(color.FgGreen, color.Bold).SprintFunc()
-	bold := color.New(color.Bold).SprintFunc()
-
 	if total > 0 {
 		for index, object := range result {
-			fmt.Printf("(%s) %s \"%s\"\n", bold(index+1), green(object.Id.Hex()), object.Title)
+			fmt.Printf("(%s) %s \"%s\"\n", helpers.ShortId(index+1), helpers.ObjectId(object.Id.Hex()), object.Title)
 		}
-		fmt.Printf("Page %s of %s\n", bold(strconv.Itoa(page)), bold(strconv.Itoa(int(total/perPage)+1)))
+		fmt.Printf("Page %s of %s\n", helpers.Bold(strconv.Itoa(page)), helpers.Bold(strconv.Itoa(int(total/perPage)+1)))
 	}
 }
