@@ -48,12 +48,16 @@ func GetObjects(c *cli.Context) {
 	result := []data.Object{}
 	query.Skip((page-1)*perPage).Limit(perPage).All(&result)
 
+	data.ClearCache()
+	defer data.FlushCache()
+
 	green := color.New(color.FgGreen, color.Bold).SprintFunc()
 	bold := color.New(color.Bold).SprintFunc()
 
 	if total > 0 {
 		for index, object := range result {
 			fmt.Printf("(%s) %s \"%s\"\n", bold(index+1), green(object.Id.Hex()), object.Title)
+			data.SetCache(strconv.Itoa(index+1), object.Id.Hex())
 		}
 		fmt.Printf("Page %s of %s\n", bold(strconv.Itoa(page)), bold(strconv.Itoa(int(total/perPage)+1)))
 	}
@@ -62,8 +66,9 @@ func GetObjects(c *cli.Context) {
 func GetObject(c *cli.Context) {
 	color.NoColor = c.GlobalBool("no-color")
 
-	objectId := c.Args().First()
+	objectId, exists := data.AssertGuid(c.Args().First())
 	helpers.ErrExit(objectId == "", "No object ID given!")
+	helpers.ErrExit(!exists, fmt.Sprintf("No cached entry %s exists!", c.Args().First()))
 
 	object, err := data.GetObject(objectId)
 	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))

@@ -8,6 +8,10 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
+func init() {
+	data.LoadCache()
+}
+
 func main() {
 	app := cli.NewApp()
 	app.EnableBashCompletion = true
