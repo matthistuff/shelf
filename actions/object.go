@@ -104,7 +104,7 @@ func GetObject(c *cli.Context) {
 
 		for index, attachment := range object.Attachments {
 			fmt.Printf("\t(%s) %s: %s (%s)\n", helpers.ShortId(index+1), helpers.ObjectId(attachment.Id.Hex()), attachment.Filename, attachment.UploadDate.Format(time.RFC1123))
-			data.SetCache(strconv.Itoa(index+1), object.Id.Hex())
+			data.SetCache(strconv.Itoa(index+1), attachment.Id.Hex())
 		}
 	}
 }
