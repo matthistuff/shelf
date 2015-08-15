@@ -53,6 +53,24 @@ func GetAttachment(c *cli.Context) {
 	helpers.ErrPanic(err)
 }
 
+func DeleteAttachment(c *cli.Context) {
+	objectId := helpers.ValidId(c.Args().First())
+
+	err := data.Files().RemoveId(bson.ObjectIdHex(objectId))
+	helpers.ErrPanic(err)
+
+	query := data.Objects().Find(bson.M{
+		"attachments._id": bson.ObjectIdHex(objectId),
+	})
+
+	result := []data.Object{}
+	query.All(&result)
+
+	for _, object := range result {
+		object.RemoveAttachment(objectId)
+	}
+}
+
 func ListAttachments(c *cli.Context) {
 	helpers.Color(c)
 

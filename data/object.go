@@ -48,6 +48,23 @@ func (o *Object) RemoveAttribute(name string, value string) {
 	}
 }
 
+func (o *Object) AttachmentIndex(objectId string) int {
+	for index, attachment := range o.Attachments {
+		if attachment.Id.Hex() == objectId {
+			return index
+		}
+	}
+
+	return -1
+}
+
+func (o *Object) RemoveAttachment(objectId string) {
+	if index := o.AttachmentIndex(objectId); index > -1 {
+		o.Attachments = append(o.Attachments[:index], o.Attachments[index+1:]...)
+		o.Update()
+	}
+}
+
 func (o *Object) AddTag(value string) {
 	o.AddAttribute("tag", value)
 }

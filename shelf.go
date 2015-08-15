@@ -59,6 +59,11 @@ func main() {
 			Action: actions.AddAttachment,
 		},
 		{
+			Name: "detach",
+			Usage: "remove a file from an document",
+			Action: actions.DeleteAttachment,
+		},
+		{
 			Name: "attachments",
 			Usage: "list all attachments of an document",
 			Action: actions.ListAttachments,
