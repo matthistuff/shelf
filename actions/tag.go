@@ -13,7 +13,7 @@ func AddTag(c *cli.Context) {
 		helpers.ErrExit(true, "Not enough arguments provided")
 	}
 
-	objectId := c.Args().First()
+	objectId := helpers.ValidId(c.Args().First())
 	value := strings.Join(c.Args().Tail(), " ")
 
 	object, err := data.GetObject(objectId)
@@ -31,7 +31,7 @@ func RemoveTag(c *cli.Context) {
 		helpers.ErrExit(true, "Not enough arguments provided")
 	}
 
-	objectId := c.Args().First()
+	objectId := helpers.ValidId(c.Args().First())
 	value := strings.Join(c.Args().Tail(), " ")
 
 	object, err := data.GetObject(objectId)

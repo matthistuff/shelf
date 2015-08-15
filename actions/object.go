@@ -23,7 +23,7 @@ func CreateObject(c *cli.Context) {
 }
 
 func DeleteObject(c *cli.Context) {
-	objectId := c.Args().First()
+	objectId := helpers.ValidId(c.Args().First())
 
 	object, err := data.GetObject(objectId)
 	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
@@ -47,10 +47,10 @@ func GetObjects(c *cli.Context) {
 	result := []data.Object{}
 	query.Skip((page-1)*perPage).Limit(perPage).All(&result)
 
-	data.ClearCache()
-	defer data.FlushCache()
-
 	if total > 0 {
+		data.ClearCache()
+		defer data.FlushCache()
+
 		for index, object := range result {
 			fmt.Printf("(%s) %s \"%s\"\n", helpers.ShortId(index+1), helpers.ObjectId(object.Id.Hex()), object.Title)
 			data.SetCache(strconv.Itoa(index+1), object.Id.Hex())
@@ -62,9 +62,7 @@ func GetObjects(c *cli.Context) {
 func GetObject(c *cli.Context) {
 	helpers.Color(c)
 
-	objectId, exists := data.AssertGuid(c.Args().First())
-	helpers.ErrExit(objectId == "", "No object ID given!")
-	helpers.ErrExit(!exists, fmt.Sprintf("No cached entry %s exists!", c.Args().First()))
+	objectId := helpers.ValidId(c.Args().First())
 
 	object, err := data.GetObject(objectId)
 	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))

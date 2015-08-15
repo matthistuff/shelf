@@ -13,7 +13,8 @@ func AddAttribute(c *cli.Context) {
 		helpers.ErrExit(true, "Not enough arguments provided")
 	}
 
-	objectId := c.Args().First()
+	objectId := helpers.ValidId(c.Args().First())
+
 	name := c.Args().Get(1)
 	value := strings.Join(c.Args()[2:], " ")
 
@@ -32,7 +33,8 @@ func RemoveAttribute(c *cli.Context) {
 		helpers.ErrExit(true, "Not enough arguments provided")
 	}
 
-	objectId := c.Args().First()
+	objectId := helpers.ValidId(c.Args().First())
+
 	name := c.Args().Get(1)
 	value := strings.Join(c.Args()[2:], " ")
 

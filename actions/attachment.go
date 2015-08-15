@@ -9,14 +9,13 @@ import (
 	"fmt"
 	"github.com/matthistuff/shelf/helpers"
 	"gopkg.in/mgo.v2/bson"
+	"strconv"
 )
 
 
 func AddAttachment(c *cli.Context) {
-	objectId := c.Args().First()
+	objectId := helpers.ValidId(c.Args().First())
 	filepath := c.Args().Get(1)
-
-	helpers.ErrExit(objectId == "", "No object ID given!")
 
 	object, err := data.GetObject(objectId)
 	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
@@ -42,11 +41,9 @@ func AddAttachment(c *cli.Context) {
 }
 
 func GetAttachment(c *cli.Context) {
-	attachmentId := c.Args().First()
+	objectId := helpers.ValidId(c.Args().First())
 
-	helpers.ErrExit(attachmentId == "", "No object ID given!")
-
-	file, err := data.Files().OpenId(bson.ObjectIdHex(attachmentId))
+	file, err := data.Files().OpenId(bson.ObjectIdHex(objectId))
 	helpers.ErrPanic(err)
 
 	_, err = io.Copy(os.Stdout, file)
@@ -59,13 +56,18 @@ func GetAttachment(c *cli.Context) {
 func ListAttachments(c *cli.Context) {
 	helpers.Color(c)
 
-	objectId := c.Args().First()
-	helpers.ErrExit(objectId == "", "No object ID given!")
+	objectId := helpers.ValidId(c.Args().First())
 
 	object, err := data.GetObject(objectId)
 	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
-	for index, attachment := range object.Attachments {
-		fmt.Printf("(%s) %s \"%s\"\n", helpers.ShortId(index+1), helpers.ObjectId(attachment.Id.Hex()), attachment.Filename)
+	if len(object.Attachments) > 0 {
+		data.ClearCache()
+		defer data.FlushCache()
+
+		for index, attachment := range object.Attachments {
+			fmt.Printf("(%s) %s \"%s\"\n", helpers.ShortId(index+1), helpers.ObjectId(attachment.Id.Hex()), attachment.Filename)
+			data.SetCache(strconv.Itoa(index+1), attachment.Id.Hex())
+		}
 	}
 }
