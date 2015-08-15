@@ -105,6 +105,9 @@ Lists all available objects
 **attach** *\<document-id> \<path-to-file>*
 Attaches a file to a document
 
+**detach** *\<attachment-id>*
+Removes a file from a document
+
 **attachments** *\<document-id>*
 Lists all attachments of a document
 
