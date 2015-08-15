@@ -62,12 +62,13 @@ Get document info.
 ```
 shelf info 55b632d6290346187d000001
 >another awesome document
+>
 >Created at Mon, 27 Jul 2015 15:32:06 CEST
 >
 >Attributes
 >
 >Attachments
->	55b63311290346188b000001: secret.pdf (Mon, 27 Jul 2015 15:33:05 CEST)
+>	(1) 55b63311290346188b000001: secret.pdf (Mon, 27 Jul 2015 15:33:05 CEST)
 ```
 
 Search for documents.
@@ -130,3 +131,7 @@ Search does a full text search on the document title, attachment content (soon) 
 You can limit the search to documents with certain attributes by using the syntax *\<attribute-name>:\<attribute-value>*.
 
 Search always uses logical AND when combining text and attribute searches. The position of the items does not matter.
+
+## Short Ids
+
+All commands support using short ids from listed object outputs. Whenever you see a number in parenthesis next to an 24 character hex (`(1) 55b6325c2903461865000001 ...`), you can use the short number as an alias to the long hex id.
