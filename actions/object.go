@@ -5,7 +5,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/matthistuff/shelf/colors"
 	"github.com/matthistuff/shelf/data"
-	"github.com/matthistuff/shelf/helpers"
+	"github.com/matthistuff/shelf/helper"
 	"sort"
 	"strconv"
 	"strings"
@@ -18,16 +18,16 @@ func CreateObject(c *cli.Context) {
 	object := data.CreateObject(title)
 
 	err := data.Objects().Insert(object)
-	helpers.ErrPanic(err)
+	helper.ErrPanic(err)
 
 	fmt.Printf("%s\n", object.Id.Hex())
 }
 
 func DeleteObject(c *cli.Context) {
-	objectId := helpers.ValidId(c.Args().First())
+	objectId := helper.ValidId(c.Args().First())
 
 	object, err := data.GetObject(objectId)
-	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
+	helper.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
 	files := data.Files()
 	for _, attachment := range object.Attachments {
@@ -63,10 +63,10 @@ func GetObjects(c *cli.Context) {
 func GetObject(c *cli.Context) {
 	colors.Allow(c)
 
-	objectId := helpers.ValidId(c.Args().First())
+	objectId := helper.ValidId(c.Args().First())
 
 	object, err := data.GetObject(objectId)
-	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
+	helper.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
 	attributes := make(map[string][]string)
 	for _, attribute := range object.Attributes {

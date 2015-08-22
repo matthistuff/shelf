@@ -4,20 +4,20 @@ import (
 	"fmt"
 	"github.com/codegangsta/cli"
 	"github.com/matthistuff/shelf/data"
-	"github.com/matthistuff/shelf/helpers"
+	"github.com/matthistuff/shelf/helper"
 	"strings"
 )
 
 func AddTag(c *cli.Context) {
 	if len(c.Args()) < 2 {
-		helpers.ErrExit(true, "Not enough arguments provided")
+		helper.ErrExit(true, "Not enough arguments provided")
 	}
 
-	objectId := helpers.ValidId(c.Args().First())
+	objectId := helper.ValidId(c.Args().First())
 	value := strings.Join(c.Args().Tail(), " ")
 
 	object, err := data.GetObject(objectId)
-	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
+	helper.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
 	if object.HasTag(value) {
 		return
@@ -28,14 +28,14 @@ func AddTag(c *cli.Context) {
 
 func RemoveTag(c *cli.Context) {
 	if len(c.Args()) < 2 {
-		helpers.ErrExit(true, "Not enough arguments provided")
+		helper.ErrExit(true, "Not enough arguments provided")
 	}
 
-	objectId := helpers.ValidId(c.Args().First())
+	objectId := helper.ValidId(c.Args().First())
 	value := strings.Join(c.Args().Tail(), " ")
 
 	object, err := data.GetObject(objectId)
-	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
+	helper.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
 	object.RemoveTag(value)
 }

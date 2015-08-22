@@ -5,7 +5,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/matthistuff/shelf/colors"
 	"github.com/matthistuff/shelf/data"
-	"github.com/matthistuff/shelf/helpers"
+	"github.com/matthistuff/shelf/helper"
 	"gopkg.in/mgo.v2/bson"
 	"io"
 	"os"
@@ -14,24 +14,24 @@ import (
 )
 
 func AddAttachment(c *cli.Context) {
-	objectId := helpers.ValidId(c.Args().First())
+	objectId := helper.ValidId(c.Args().First())
 	filepath := c.Args().Get(1)
 
 	object, err := data.GetObject(objectId)
-	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
+	helper.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
 	dbFile, err := data.Files().Create("")
-	helpers.ErrPanic(err)
+	helper.ErrPanic(err)
 
 	file, err := os.Open(filepath)
-	helpers.ErrPanic(err)
+	helper.ErrPanic(err)
 	defer file.Close()
 
 	_, err = io.Copy(dbFile, file)
-	helpers.ErrPanic(err)
+	helper.ErrPanic(err)
 
 	err = dbFile.Close()
-	helpers.ErrPanic(err)
+	helper.ErrPanic(err)
 
 	attachment := data.CreateAttachment(dbFile, path.Base(filepath))
 	object.Attachments = append(object.Attachments, *attachment)
@@ -41,23 +41,23 @@ func AddAttachment(c *cli.Context) {
 }
 
 func GetAttachment(c *cli.Context) {
-	objectId := helpers.ValidId(c.Args().First())
+	objectId := helper.ValidId(c.Args().First())
 
 	file, err := data.Files().OpenId(bson.ObjectIdHex(objectId))
-	helpers.ErrPanic(err)
+	helper.ErrPanic(err)
 
 	_, err = io.Copy(os.Stdout, file)
-	helpers.ErrPanic(err)
+	helper.ErrPanic(err)
 
 	err = file.Close()
-	helpers.ErrPanic(err)
+	helper.ErrPanic(err)
 }
 
 func DeleteAttachment(c *cli.Context) {
-	objectId := helpers.ValidId(c.Args().First())
+	objectId := helper.ValidId(c.Args().First())
 
 	err := data.Files().RemoveId(bson.ObjectIdHex(objectId))
-	helpers.ErrPanic(err)
+	helper.ErrPanic(err)
 
 	query := data.Objects().Find(bson.M{
 		"attachments._id": bson.ObjectIdHex(objectId),
@@ -74,10 +74,10 @@ func DeleteAttachment(c *cli.Context) {
 func ListAttachments(c *cli.Context) {
 	colors.Allow(c)
 
-	objectId := helpers.ValidId(c.Args().First())
+	objectId := helper.ValidId(c.Args().First())
 
 	object, err := data.GetObject(objectId)
-	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
+	helper.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
 	if len(object.Attachments) > 0 {
 		data.ClearCache()
