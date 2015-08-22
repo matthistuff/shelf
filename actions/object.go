@@ -9,6 +9,7 @@ import (
 	"sort"
 	"time"
 	"strconv"
+	"github.com/matthistuff/shelf/colors"
 )
 
 func CreateObject(c *cli.Context) {
@@ -37,7 +38,7 @@ func DeleteObject(c *cli.Context) {
 }
 
 func GetObjects(c *cli.Context) {
-	helpers.Color(c)
+	colors.Allow(c)
 
 	query := data.Objects().Find(nil).Sort("-_id")
 
@@ -52,15 +53,15 @@ func GetObjects(c *cli.Context) {
 		defer data.FlushCache()
 
 		for index, object := range result {
-			fmt.Printf("(%s) %s \"%s\"\n", helpers.ShortId(index+1), helpers.ObjectId(object.Id.Hex()), object.Title)
+			fmt.Printf("(%s) %s \"%s\"\n", colors.ShortId(index+1), colors.ObjectId(object.Id.Hex()), object.Title)
 			data.SetCache(strconv.Itoa(index+1), object.Id.Hex())
 		}
-		fmt.Printf("Page %s of %s\n", helpers.Bold(strconv.Itoa(page)), helpers.Bold(strconv.Itoa(int(total/perPage)+1)))
+		fmt.Printf("Page %s of %s\n", colors.Bold(strconv.Itoa(page)), colors.Bold(strconv.Itoa(int(total/perPage)+1)))
 	}
 }
 
 func GetObject(c *cli.Context) {
-	helpers.Color(c)
+	colors.Allow(c)
 
 	objectId := helpers.ValidId(c.Args().First())
 
@@ -78,21 +79,21 @@ func GetObject(c *cli.Context) {
 	}
 	sort.Strings(keys)
 
-	fmt.Printf("%s\n\n", helpers.Bold(object.Title))
-	fmt.Printf("%s\n\t%s\n", helpers.Header("Created"), object.CreateDate.Format(time.RFC1123))
+	fmt.Printf("%s\n\n", colors.Bold(object.Title))
+	fmt.Printf("%s\n\t%s\n", colors.Header("Created"), object.CreateDate.Format(time.RFC1123))
 
 	if _, exists := attributes["content"]; exists {
-		fmt.Printf("\n%s\n\t%s\n", helpers.Header("Content"), strings.Join(attributes["content"], ", "))
+		fmt.Printf("\n%s\n\t%s\n", colors.Header("Content"), strings.Join(attributes["content"], ", "))
 		delete(attributes, "content")
 	}
 
 	if len(attributes) > 0 {
-		fmt.Printf("\n%s\n", helpers.Header("Attributes"))
+		fmt.Printf("\n%s\n", colors.Header("Attributes"))
 
 		for k := range keys {
 			sort.Strings(attributes[keys[k]])
 
-			fmt.Printf("\t%s: %s\n", helpers.Bold(keys[k]), strings.Join(attributes[keys[k]], ", "))
+			fmt.Printf("\t%s: %s\n", colors.Bold(keys[k]), strings.Join(attributes[keys[k]], ", "))
 		}
 	}
 
@@ -100,11 +101,11 @@ func GetObject(c *cli.Context) {
 		data.ClearCache()
 		defer data.FlushCache()
 
-		fmt.Printf("\n%s\n", helpers.Header("Attachments"))
+		fmt.Printf("\n%s\n", colors.Header("Attachments"))
 
 		for index, attachment := range object.Attachments {
-			fmt.Printf("\t(%s) %s: %s (%s)\n", helpers.ShortId(index+1), helpers.ObjectId(attachment.Id.Hex()), attachment.Filename, attachment.UploadDate.Format(time.RFC1123))
-			data.SetCache(strconv.Itoa(index+1), attachment.Id.Hex())
+			fmt.Printf("\t(%s) %s: %s (%s)\n", colors.ShortId(index + 1), colors.ObjectId(attachment.Id.Hex()), attachment.Filename, attachment.UploadDate.Format(time.RFC1123))
+			data.SetCache(strconv.Itoa(index + 1), attachment.Id.Hex())
 		}
 	}
 }

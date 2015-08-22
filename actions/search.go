@@ -1,15 +1,16 @@
 package actions
+
 import (
 	"github.com/codegangsta/cli"
 	"github.com/matthistuff/shelf/data"
 	"gopkg.in/mgo.v2/bson"
 	"fmt"
 	"strconv"
-	"github.com/matthistuff/shelf/helpers"
+	"github.com/matthistuff/shelf/colors"
 )
 
 func Search(c *cli.Context) {
-	helpers.Color(c)
+	colors.Allow(c)
 
 	page := c.Int("page")
 	perPage := 10
@@ -51,8 +52,8 @@ func Search(c *cli.Context) {
 
 	if total > 0 {
 		for index, object := range result {
-			fmt.Printf("(%s) %s \"%s\"\n", helpers.ShortId(index+1), helpers.ObjectId(object.Id.Hex()), object.Title)
+			fmt.Printf("(%s) %s \"%s\"\n", colors.ShortId(index+1), colors.ObjectId(object.Id.Hex()), object.Title)
 		}
-		fmt.Printf("Page %s of %s\n", helpers.Bold(strconv.Itoa(page)), helpers.Bold(strconv.Itoa(int(total/perPage)+1)))
+		fmt.Printf("Page %s of %s\n", colors.Bold(strconv.Itoa(page)), colors.Bold(strconv.Itoa(int(total/perPage)+1)))
 	}
 }

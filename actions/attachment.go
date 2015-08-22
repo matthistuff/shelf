@@ -10,6 +10,7 @@ import (
 	"github.com/matthistuff/shelf/helpers"
 	"gopkg.in/mgo.v2/bson"
 	"strconv"
+	"github.com/matthistuff/shelf/colors"
 )
 
 
@@ -72,7 +73,7 @@ func DeleteAttachment(c *cli.Context) {
 }
 
 func ListAttachments(c *cli.Context) {
-	helpers.Color(c)
+	colors.Allow(c)
 
 	objectId := helpers.ValidId(c.Args().First())
 
@@ -84,7 +85,7 @@ func ListAttachments(c *cli.Context) {
 		defer data.FlushCache()
 
 		for index, attachment := range object.Attachments {
-			fmt.Printf("(%s) %s \"%s\"\n", helpers.ShortId(index+1), helpers.ObjectId(attachment.Id.Hex()), attachment.Filename)
+			fmt.Printf("(%s) %s \"%s\"\n", colors.ShortId(index+1), colors.ObjectId(attachment.Id.Hex()), attachment.Filename)
 			data.SetCache(strconv.Itoa(index+1), attachment.Id.Hex())
 		}
 	}
