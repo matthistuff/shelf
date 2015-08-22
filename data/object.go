@@ -9,7 +9,7 @@ type Object struct {
 	Id          bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	Title       string        `bson:"title" json:"title"`
 	CreateDate  time.Time     `bson:"createDate" json:"createDate"`
-	Attributes  []Attribute   `bson:"attributes" json:"attributes"`
+	Attributes  []KeyVal      `bson:"attributes" json:"attributes"`
 	Attachments []Attachment  `bson:"attachments" json:"attachments"`
 }
 
@@ -18,7 +18,7 @@ func (o *Object) Update() error {
 }
 
 func (o *Object) AddAttribute(name string, value string) {
-	attribute := Attribute{
+	attribute := KeyVal{
 		Name:  name,
 		Value: value,
 	}

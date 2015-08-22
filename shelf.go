@@ -127,12 +127,14 @@ func main() {
 		Key: []string{
 			"$text:title",
 			"$text:attachments.content",
+			"$text:attachments.metadata.value",
 			"$text:attributes.value",
 		},
 		Weights: map[string]int{
-			"title":               10,
-			"attachments.content": 5,
-			"attributes.value":    1,
+			"title":                      10,
+			"attributes.value":           8,
+			"attachments.metadata.value": 8,
+			"attachments.content":        5,
 		},
 	})
 
