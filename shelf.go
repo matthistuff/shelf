@@ -1,11 +1,11 @@
 package main
 
 import (
-	"os"
 	"github.com/codegangsta/cli"
 	"github.com/matthistuff/shelf/actions"
 	"github.com/matthistuff/shelf/data"
 	"gopkg.in/mgo.v2"
+	"os"
 )
 
 func init() {
@@ -20,94 +20,94 @@ func main() {
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
-			Name: "no-color",
+			Name:  "no-color",
 			Usage: "disable colored output",
 		},
 	}
 
 	app.Commands = []cli.Command{
 		{
-			Name: "create",
-			Usage: "create an document",
+			Name:   "create",
+			Usage:  "create an document",
 			Action: actions.CreateObject,
 		},
 		{
-			Name: "delete",
-			Usage: "deletes an document",
+			Name:   "delete",
+			Usage:  "deletes an document",
 			Action: actions.DeleteObject,
 		},
 		{
-			Name: "list",
-			Usage: "lists documents",
+			Name:   "list",
+			Usage:  "lists documents",
 			Action: actions.GetObjects,
 			Flags: []cli.Flag{
 				cli.IntFlag{
-					Name: "page",
+					Name:  "page",
 					Value: 1,
-					Usage:"results page",
+					Usage: "results page",
 				},
 			},
 		},
 		{
-			Name: "info",
-			Usage: "print information about an document",
+			Name:   "info",
+			Usage:  "print information about an document",
 			Action: actions.GetObject,
 		},
 		{
-			Name: "attach",
-			Usage: "attach a file to an document",
+			Name:   "attach",
+			Usage:  "attach a file to an document",
 			Action: actions.AddAttachment,
 		},
 		{
-			Name: "detach",
-			Usage: "remove a file from an document",
+			Name:   "detach",
+			Usage:  "remove a file from an document",
 			Action: actions.DeleteAttachment,
 		},
 		{
-			Name: "attachments",
-			Usage: "list all attachments of an document",
+			Name:   "attachments",
+			Usage:  "list all attachments of an document",
 			Action: actions.ListAttachments,
 		},
 		{
-			Name: "retrieve",
-			Usage: "send an attachment to stdout",
+			Name:   "retrieve",
+			Usage:  "send an attachment to stdout",
 			Action: actions.GetAttachment,
 		},
 		{
-			Name: "attribute",
+			Name:  "attribute",
 			Usage: "manage document attributes",
 			Subcommands: []cli.Command{
 				{
-					Name: "add",
-					Usage: "add an attribute to an document",
+					Name:   "add",
+					Usage:  "add an attribute to an document",
 					Action: actions.AddAttribute,
 				},
 				{
-					Name: "remove",
-					Usage: "remove an attribute from an document",
+					Name:   "remove",
+					Usage:  "remove an attribute from an document",
 					Action: actions.RemoveAttribute,
 				},
 			},
 		},
 		{
-			Name: "tag",
-			Usage: "add a tag to an document",
+			Name:   "tag",
+			Usage:  "add a tag to an document",
 			Action: actions.AddTag,
 		},
 		{
-			Name: "untag",
-			Usage: "remove a tag from an document",
+			Name:   "untag",
+			Usage:  "remove a tag from an document",
 			Action: actions.RemoveTag,
 		},
 		{
-			Name: "search",
-			Usage: "search documents",
+			Name:   "search",
+			Usage:  "search documents",
 			Action: actions.Search,
 			Flags: []cli.Flag{
 				cli.IntFlag{
-					Name: "page",
+					Name:  "page",
 					Value: 1,
-					Usage:"search results page",
+					Usage: "search results page",
 				},
 			},
 		},
@@ -123,9 +123,9 @@ func main() {
 			"$text:attributes.value",
 		},
 		Weights: map[string]int{
-			"title": 10,
+			"title":               10,
 			"attachments.content": 5,
-			"attributes.value": 1,
+			"attributes.value":    1,
 		},
 	})
 

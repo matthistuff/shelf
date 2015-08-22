@@ -1,7 +1,8 @@
 package helpers
+
 import (
-	"github.com/matthistuff/shelf/data"
 	"fmt"
+	"github.com/matthistuff/shelf/data"
 )
 
 func ValidId(maybeId string) string {

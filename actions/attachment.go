@@ -1,18 +1,17 @@
 package actions
 
 import (
-	"github.com/codegangsta/cli"
-	"github.com/matthistuff/shelf/data"
-	"os"
-	"io"
-	"path"
 	"fmt"
+	"github.com/codegangsta/cli"
+	"github.com/matthistuff/shelf/colors"
+	"github.com/matthistuff/shelf/data"
 	"github.com/matthistuff/shelf/helpers"
 	"gopkg.in/mgo.v2/bson"
+	"io"
+	"os"
+	"path"
 	"strconv"
-	"github.com/matthistuff/shelf/colors"
 )
-
 
 func AddAttachment(c *cli.Context) {
 	objectId := helpers.ValidId(c.Args().First())

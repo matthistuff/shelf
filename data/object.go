@@ -7,10 +7,10 @@ import (
 
 type Object struct {
 	Id          bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	Title       string `bson:"title" json:"title"`
-	CreateDate  time.Time `bson:"createDate" json:"createDate"`
-	Attributes  []Attribute `bson:"attributes" json:"attributes"`
-	Attachments []Attachment `bson:"attachments" json:"attachments"`
+	Title       string        `bson:"title" json:"title"`
+	CreateDate  time.Time     `bson:"createDate" json:"createDate"`
+	Attributes  []Attribute   `bson:"attributes" json:"attributes"`
+	Attachments []Attachment  `bson:"attachments" json:"attachments"`
 }
 
 func (o *Object) Update() error {
@@ -19,7 +19,7 @@ func (o *Object) Update() error {
 
 func (o *Object) AddAttribute(name string, value string) {
 	attribute := Attribute{
-		Name: name,
+		Name:  name,
 		Value: value,
 	}
 
@@ -79,8 +79,8 @@ func (o Object) RemoveTag(tag string) {
 
 func CreateObject(title string) *Object {
 	return &Object{
-		Id: bson.NewObjectId(),
-		Title: title,
+		Id:         bson.NewObjectId(),
+		Title:      title,
 		CreateDate: time.Now(),
 	}
 }

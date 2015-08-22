@@ -1,15 +1,15 @@
 package actions
 
 import (
-	"github.com/codegangsta/cli"
-	"github.com/matthistuff/shelf/data"
 	"fmt"
-	"github.com/matthistuff/shelf/helpers"
-	"strings"
-	"sort"
-	"time"
-	"strconv"
+	"github.com/codegangsta/cli"
 	"github.com/matthistuff/shelf/colors"
+	"github.com/matthistuff/shelf/data"
+	"github.com/matthistuff/shelf/helpers"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
 )
 
 func CreateObject(c *cli.Context) {
@@ -46,7 +46,7 @@ func GetObjects(c *cli.Context) {
 	perPage := 10
 	total, _ := query.Count()
 	result := []data.Object{}
-	query.Skip((page-1)*perPage).Limit(perPage).All(&result)
+	query.Skip((page - 1) * perPage).Limit(perPage).All(&result)
 
 	if total > 0 {
 		data.ClearCache()
@@ -104,8 +104,8 @@ func GetObject(c *cli.Context) {
 		fmt.Printf("\n%s\n", colors.Header("Attachments"))
 
 		for index, attachment := range object.Attachments {
-			fmt.Printf("\t(%s) %s: %s (%s)\n", colors.ShortId(index + 1), colors.ObjectId(attachment.Id.Hex()), attachment.Filename, attachment.UploadDate.Format(time.RFC1123))
-			data.SetCache(strconv.Itoa(index + 1), attachment.Id.Hex())
+			fmt.Printf("\t(%s) %s: %s (%s)\n", colors.ShortId(index+1), colors.ObjectId(attachment.Id.Hex()), attachment.Filename, attachment.UploadDate.Format(time.RFC1123))
+			data.SetCache(strconv.Itoa(index+1), attachment.Id.Hex())
 		}
 	}
 }

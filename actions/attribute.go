@@ -1,11 +1,11 @@
 package actions
 
 import (
-	"github.com/codegangsta/cli"
-	"strings"
-	"github.com/matthistuff/shelf/helpers"
 	"fmt"
+	"github.com/codegangsta/cli"
 	"github.com/matthistuff/shelf/data"
+	"github.com/matthistuff/shelf/helpers"
+	"strings"
 )
 
 func AddAttribute(c *cli.Context) {
@@ -21,7 +21,7 @@ func AddAttribute(c *cli.Context) {
 	object, err := data.GetObject(objectId)
 	helpers.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
 
-	if (object.HasAttribute(name, value)) {
+	if object.HasAttribute(name, value) {
 		return
 	}
 

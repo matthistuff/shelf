@@ -1,12 +1,12 @@
 package actions
 
 import (
+	"fmt"
 	"github.com/codegangsta/cli"
+	"github.com/matthistuff/shelf/colors"
 	"github.com/matthistuff/shelf/data"
 	"gopkg.in/mgo.v2/bson"
-	"fmt"
 	"strconv"
-	"github.com/matthistuff/shelf/colors"
 )
 
 func Search(c *cli.Context) {
@@ -19,7 +19,7 @@ func Search(c *cli.Context) {
 	search := []bson.M{}
 	if searchQuery.Text != "" {
 		search = append(search, bson.M{
-			"$text":bson.M{
+			"$text": bson.M{
 				"$search": searchQuery.Text,
 			},
 		})
@@ -48,7 +48,7 @@ func Search(c *cli.Context) {
 
 	total, _ := query.Count()
 	result := []data.Object{}
-	query.Skip((page-1)*perPage).Limit(perPage).All(&result)
+	query.Skip((page - 1) * perPage).Limit(perPage).All(&result)
 
 	if total > 0 {
 		for index, object := range result {

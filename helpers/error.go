@@ -1,7 +1,8 @@
 package helpers
+
 import (
-	"os"
 	"fmt"
+	"os"
 )
 
 func ErrPanic(err error) {

@@ -1,4 +1,5 @@
 package data
+
 import "regexp"
 
 type Query struct {
@@ -7,8 +8,8 @@ type Query struct {
 }
 
 type AttributeQuery struct {
-	Name   string
-	Value  string
+	Name  string
+	Value string
 	Exact bool
 }
 
@@ -24,7 +25,7 @@ func ParseQuery(query []string) Query {
 			parsed.Text += matches[0] + " "
 		} else {
 			parsed.AttributeQuery = append(parsed.AttributeQuery, AttributeQuery{
-				Name: matches[1],
+				Name:  matches[1],
 				Value: matches[2],
 				Exact: false,
 			})
