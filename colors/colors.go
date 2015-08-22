@@ -10,6 +10,7 @@ var (
 	ObjectId = color.New(color.FgGreen).SprintFunc()
 	ShortId  = color.New(color.FgMagenta).SprintFunc()
 	Bold     = color.New(color.Bold).SprintFunc()
+	Faint    = color.New(color.Faint).SprintFunc()
 )
 
 func Allow(c *cli.Context) {

@@ -13,6 +13,13 @@ type Object struct {
 	Attachments []Attachment  `bson:"attachments" json:"attachments"`
 }
 
+type SearchObject struct {
+	Id          bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	Title       string        `bson:"title" json:"title"`
+	Score       float64       `bson:"score" json:"score"`
+	Object
+}
+
 func (o *Object) Update() error {
 	return Objects().UpdateId(o.Id, o)
 }

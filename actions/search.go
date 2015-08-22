@@ -47,12 +47,15 @@ func Search(c *cli.Context) {
 	}).Sort("$textScore:score", "-_id")
 
 	total, _ := query.Count()
-	result := []data.Object{}
+	result := []data.SearchObject{}
 	query.Skip((page - 1) * perPage).Limit(perPage).All(&result)
 
 	if total > 0 {
 		for index, object := range result {
-			fmt.Printf("(%s) %s \"%s\"\n", colors.ShortId(index+1), colors.ObjectId(object.Id.Hex()), object.Title)
+			fmt.Printf("(%s) %s \"%s\" %s\n", colors.ShortId(index+1),
+				colors.ObjectId(object.Id.Hex()),
+				object.Title,
+				colors.Faint(fmt.Sprintf("[%.2f]", object.Score)))
 		}
 		fmt.Printf("Page %s of %s\n", colors.Bold(strconv.Itoa(page)), colors.Bold(strconv.Itoa(int(total/perPage)+1)))
 	}
