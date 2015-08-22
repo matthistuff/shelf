@@ -7,17 +7,19 @@ import (
 )
 
 type Attachment struct {
-	UploadDate time.Time     `bson:"uploadDate" json:"uploadDate"`
-	Filename   string        `bson:"filename" json:"filename"`
-	Content    string        `bson:"content" json:"content"`
-	Id         bson.ObjectId `bson:"_id" json:"id"`
+	Id         bson.ObjectId     `bson:"_id" json:"id"`
+	UploadDate time.Time         `bson:"uploadDate" json:"uploadDate"`
+	Filename   string            `bson:"filename" json:"filename"`
+	MetaData   map[string]string `bson:"metadata" json:"metadata"`
+	Content    string            `bson:"content" json:"content"`
 }
 
-func CreateAttachment(file *mgo.GridFile, filename string) *Attachment {
+func CreateAttachment(file *mgo.GridFile, filename string, content string, metadata map[string]string) *Attachment {
 	return &Attachment{
+		Id:         file.Id().(bson.ObjectId),
 		UploadDate: file.UploadDate(),
 		Filename:   filename,
-		Content:    "",
-		Id:         file.Id().(bson.ObjectId),
+		MetaData:   metadata,
+		Content:    content,
 	}
 }

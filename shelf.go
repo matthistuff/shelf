@@ -57,6 +57,13 @@ func main() {
 			Name:   "attach",
 			Usage:  "attach a file to an document",
 			Action: actions.AddAttachment,
+			Flags: []cli.Flag{
+				cli.BoolTFlag{
+					Name:   "extract-pdf-text",
+					Usage:  "try to extract text from pdf, relies on pdftotext (poppler/poppler-utils)",
+					EnvVar: "SHELF_EXTRACT_PDF_TEXT",
+				},
+			},
 		},
 		{
 			Name:   "detach",

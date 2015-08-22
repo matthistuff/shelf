@@ -10,12 +10,14 @@ import (
 	"io"
 	"os"
 	"path"
+	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 func AddAttachment(c *cli.Context) {
 	objectId := helper.ValidId(c.Args().First())
-	filepath := c.Args().Get(1)
+	attachmentPath := c.Args().Get(1)
 
 	object, err := data.GetObject(objectId)
 	helper.ErrExit(err != nil, fmt.Sprintf("Invalid object ID %s!\n", objectId))
@@ -23,7 +25,7 @@ func AddAttachment(c *cli.Context) {
 	dbFile, err := data.Files().Create("")
 	helper.ErrPanic(err)
 
-	file, err := os.Open(filepath)
+	file, err := os.Open(attachmentPath)
 	helper.ErrPanic(err)
 	defer file.Close()
 
@@ -33,7 +35,19 @@ func AddAttachment(c *cli.Context) {
 	err = dbFile.Close()
 	helper.ErrPanic(err)
 
-	attachment := data.CreateAttachment(dbFile, path.Base(filepath))
+	var (
+		content  = ""
+		metadata = make(map[string]string)
+	)
+
+	if strings.ToLower(filepath.Ext(file.Name())) == ".pdf" {
+		if c.BoolT("extract-pdf-text") {
+			content, metadata, err = helper.ConvertPDF(file)
+			helper.ErrPanic(err)
+		}
+	}
+
+	attachment := data.CreateAttachment(dbFile, path.Base(attachmentPath), content, metadata)
 	object.Attachments = append(object.Attachments, *attachment)
 	object.Update()
 
