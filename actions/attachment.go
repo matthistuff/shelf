@@ -11,8 +11,10 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func AddAttachment(c *cli.Context) {
@@ -65,6 +67,31 @@ func GetAttachment(c *cli.Context) {
 
 	err = file.Close()
 	helper.ErrPanic(err)
+}
+
+func GetAttachmentInfo(c *cli.Context) {
+	objectId := helper.ValidId(c.Args().First())
+
+	attachment, err := data.GetAttachment(objectId)
+	helper.ErrPanic(err)
+
+	metadata := make(map[string]string)
+	for _, attribute := range attachment.MetaData {
+		metadata[attribute.Name] = attribute.Value
+	}
+
+	keys := make([]string, 0, len(metadata))
+	for k := range metadata {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	fmt.Printf("%s\n\n", colors.Bold(attachment.Filename))
+	fmt.Printf("%s\n\t%s\n", colors.Header("Uploaded"), attachment.UploadDate.Format(time.RFC1123))
+
+	for _, name := range keys {
+		fmt.Printf("%s\n\t%v\n", colors.Header(name), metadata[name])
+	}
 }
 
 func DeleteAttachment(c *cli.Context) {

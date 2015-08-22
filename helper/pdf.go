@@ -37,12 +37,12 @@ func ConvertPDF(r io.Reader) (string, map[string]string, error) {
 
 		if tmp, ok := info["ModDate"]; ok {
 			if t, err := time.Parse(time.ANSIC, tmp); err == nil {
-				info["ModDate"] = fmt.Sprintf("%d", t.Unix())
+				info["ModDate"] = t.Format(time.RFC1123)
 			}
 		}
 		if tmp, ok := info["CreationDate"]; ok {
 			if t, err := time.Parse(time.ANSIC, tmp); err == nil {
-				info["CreationDate"] = fmt.Sprintf("%d", t.Unix())
+				info["CreationDate"] = t.Format(time.RFC1123)
 			}
 		}
 

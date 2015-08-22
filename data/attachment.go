@@ -34,3 +34,20 @@ func CreateAttachment(file *mgo.GridFile, filename string, content string, metad
 		Content:    content,
 	}
 }
+
+func GetAttachment(id string) (Attachment, error) {
+	object := &Object{}
+
+	err := Objects().Find(bson.M{
+		"attachments": bson.M{
+			"$elemMatch": bson.M{
+				"_id": bson.ObjectIdHex(id),
+			},
+		},
+	}).One(object)
+	if err != nil {
+		return Attachment{}, err
+	}
+
+	return object.GetAttachment(id), err
+}

@@ -50,8 +50,8 @@ func main() {
 		},
 		{
 			Name:   "info",
-			Usage:  "print information about an document",
-			Action: actions.GetObject,
+			Usage:  "print information about an document or attachment",
+			Action: actions.GetInfo,
 		},
 		{
 			Name:   "attach",

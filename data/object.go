@@ -48,6 +48,10 @@ func (o *Object) RemoveAttribute(name string, value string) {
 	}
 }
 
+func (o *Object) GetAttachment(objectId string) Attachment {
+	return o.Attachments[o.AttachmentIndex(objectId)]
+}
+
 func (o *Object) AttachmentIndex(objectId string) int {
 	for index, attachment := range o.Attachments {
 		if attachment.Id.Hex() == objectId {
